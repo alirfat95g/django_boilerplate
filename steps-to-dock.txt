@@ -1,0 +1,72 @@
+1- database configs and env configs
+settings.py
+from environs import Env  # new
+env = Env()  # new
+env.read_env()
+DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+
+
+create .env file
+DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+
+2- docker and docker-compose configs
+names etc
+
+3- staticfiles
+
+settings.py
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+
+add whitenoise to:
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "posts",
+    "whitenoise.runserver_nostatic",
+]
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+
+>python manage.py collectstatic 
+
+
+4- docker
+
+run docker
+>docker-compose build
+>docker-compose up
+
+channel to container:
+docker exec -it django_container /bin/bash
+
+>python manage.py migrate
+>python manage.py createsuperuser
+
+
+
+
